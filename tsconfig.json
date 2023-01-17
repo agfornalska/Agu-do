@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "es2022",
+    "strict": true,
+    "sourceMap": true,
+    "target": "ESNext",
+    "outDir": "public",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*", "src/index.js"],
+  "exclude": ["node_modules"]
+}
