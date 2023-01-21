@@ -14,54 +14,33 @@ const items = [
   },
 ]
 
-function handleClick(loginType, givenName) {
-  console.log(
-    '🚀 ~ file: LoggingComponent.js:18 ~ handleClick ~ givenName',
-    givenName
-  )
-  const requestBody = {
-    userName: givenName,
-  }
-
-  if (loginType === 'login') {
-    fetch('/auth', { method: 'POST', body: JSON.stringify(requestBody) })
-      .then((response) => response.json())
-      .then((responseBody) => {
-        console.log('Success:', responseBody)
-      })
-  }
-}
-
-function Login({ loginType }) {
-  const [userName, setUserName] = React.useState(null)
-
-  return (
-    <>
-      <Input
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        placeholder='Enter your username'
-        prefix={<UserOutlined className='site-form-item-icon' />}
-        suffix={
-          <Tooltip title='Extra information'>
-            <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
-          </Tooltip>
-        }
-      />
-
-      <Button type='primary' onClick={() => handleClick(loginType, userName)}>
-        {loginType}
-      </Button>
-    </>
-  )
-}
-
-export function LoggingComponent() {
+export function LoggingComponent({ userData, setUserData }) {
   const [current, setCurrent] = useState('login')
-  console.log(
-    '🚀 ~ file: LoggingComponent.js:56 ~ LoggingComponent ~ current',
-    current
-  )
+  const { id, name } = userData
+
+  function handleClick() {
+    const requestBody = { userName: name }
+
+    if (current === 'login') {
+      fetch('/auth', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+      }).then((response) => console.log('Success:', response))
+      // .then((responseBody) => {
+      //   console.log('Success:', responseBody)
+      //   setUserData({ name: responseBody.name, id: responseBody.id })
+      // })
+      // .catch((error) => {
+      //   console.error('Error:', error)
+      // })
+    } else
+      fetch('/user', { method: 'POST', body: JSON.stringify(requestBody) })
+        .then((response) => response.json())
+        .then((responseBody) => {
+          console.log('Success:', responseBody)
+          setUserData({ name: responseBody.name, id: responseBody.id })
+        })
+  }
 
   return (
     <>
@@ -72,7 +51,27 @@ export function LoggingComponent() {
         items={items}
       />
       <br />
-      <Login loginType={current} />
+      <>
+        <Input
+          value={name}
+          onChange={(e) => setUserData({ name: e.target.value, id })}
+          placeholder='Enter your username'
+          prefix={<UserOutlined className='site-form-item-icon' />}
+          suffix={
+            <Tooltip title='Extra information'>
+              <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+            </Tooltip>
+          }
+        />
+        <br />
+        <br />
+        <Button
+          type='primary'
+          onClick={() => handleClick(current, userData, setUserData)}
+        >
+          {current}
+        </Button>
+      </>
     </>
   )
 }

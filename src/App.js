@@ -8,7 +8,6 @@ function App() {
       <header>
         <TabsComponent />
       </header>
-      <LoggingComponent />
     </div>
   )
 }

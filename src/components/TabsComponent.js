@@ -4,21 +4,19 @@ import { Tabs } from 'antd'
 import { LoggingComponent } from './LoggingComponent'
 import { TabContent } from './TabContent'
 
-const initialItems = [
-  { label: 'Agu', children: <TabContent />, key: '1' },
-  { label: 'Patryk', children: <TabContent />, key: '2' },
-  {
-    label: 'Tab 3',
-    children: 'Content of Tab 3',
-    key: '3',
-  },
-]
-
-export const TabsComponent = () => {
+export function TabsComponent() {
+  const { id, name } = { id: null, name: null }
+  const initialItems = [
+    {
+      label: name,
+      children: <TabContent />,
+      key: '1',
+      id: id,
+    },
+  ]
   const [activeKey, setActiveKey] = useState(initialItems[0].key)
   const [items, setItems] = useState(initialItems)
   const newTabIndex = useRef(0)
-
   const onChange = (newActiveKey) => {
     setActiveKey(newActiveKey)
   }
@@ -27,7 +25,7 @@ export const TabsComponent = () => {
     const newActiveKey = `newTab${newTabIndex.current++}`
     const newPanes = [...items] //propsy
     newPanes.push({
-      label: 'New Tab ',
+      label: 'new tab',
       children: <TabContent />,
       key: newActiveKey,
     })
