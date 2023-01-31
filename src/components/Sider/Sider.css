@@ -1,0 +1,27 @@
+.list-div {
+  width: 256px;
+}
+
+.button-default {
+  height: 100px;
+  width: 256px;
+}
+
+.button-new {
+  background: rgb(240, 130, 130);
+}
+
+.title {
+  font-size: 20px;
+  text-align: left;
+  text-decoration: underline;
+}
+.snippet {
+  font-size: 14px;
+  line-height: normal;
+  text-align: left;
+}
+
+.button-clicked {
+  background: rgb(90, 74, 182);
+}
