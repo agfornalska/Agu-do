@@ -3,8 +3,11 @@
 }
 
 .button-default {
-  height: 100px;
+  height: 120px;
   width: 256px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .button-new {
@@ -17,6 +20,7 @@
   text-decoration: underline;
 }
 .snippet {
+  max-width: 90%;
   font-size: 14px;
   line-height: normal;
   text-align: left;
@@ -24,4 +28,9 @@
 
 .button-clicked {
   background: rgb(90, 74, 182);
+}
+
+.delete {
+  min-width: 32px;
+  padding: 0px;
 }

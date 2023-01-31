@@ -18,8 +18,14 @@ const initialItems = [
 ]
 function App() {
   const [current, setCurrent] = useState('1')
+  const [items, setItems] = useState(initialItems)
   return (
-    <Sider items={initialItems} current={current} setCurrent={setCurrent} />
+    <Sider
+      items={items}
+      setItems={setItems}
+      current={current}
+      setCurrent={setCurrent}
+    />
   )
 }
 
