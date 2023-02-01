@@ -13,26 +13,40 @@ import './Sider.css'
               item.id === current ? 'button-clicked' : 'button-new'
             }`}
  */
-function deleteCurrentItem(list, setItems, current) {
-  console.log('🚀 ~ file: Sider.js:17 ~ deleteCurrentItem ~ current', current)
-  setItems((oldValues) => {
-    return oldValues.filter((item) => item.id !== current)
-  })
-}
 
 export function Sider({ items = [], setItems, current, setCurrent }) {
-  console.log('🚀 ~ file: UserContent.js:25 ~ Snippet ~ current', current)
+  console.log('🚀 ~ file: UserContent.js:32 ~ Snippet ~ current', current)
+
+  function deleteCurrentItem(event, id) {
+    console.log('🚀 ~ file: Sider.js:17 ~ deleteCurrentItem ~ current', current)
+    setItems((oldValues) => {
+      const newItems = oldValues.filter((item) => item.id !== id)
+      const newCurrentIndex = oldValues.map((item) => item.id).indexOf(id) - 1
+      console.log(
+        '🚀 ~ file: Sider.js:25 ~ setItems ~ newCurrentIndex',
+        newCurrentIndex
+      )
+      newCurrentIndex !== -1
+        ? setCurrent(newItems[newCurrentIndex].id)
+        : newItems.length !== 0
+        ? setCurrent(newItems[0].id)
+        : setCurrent(null)
+
+      return newItems
+    })
+    event.stopPropagation()
+  }
 
   return (
     <div className='list-div'>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {items.map((item) => (
-          <Button
+          <div
             key={item.id}
             onClick={() => setCurrent(item.id)}
             className={classNames([
-              'button-default',
-              item.id === current ? 'button-clicked' : 'button-new',
+              'box-default',
+              item.id === current ? 'box-clicked' : 'box-new',
             ])}
           >
             <div style={{ whiteSpace: 'normal' }}>
@@ -41,10 +55,10 @@ export function Sider({ items = [], setItems, current, setCurrent }) {
             </div>
             <Button
               className='delete'
-              onClick={() => deleteCurrentItem(items, setItems, item.id)}
+              onClick={(event) => deleteCurrentItem(event, item.id)}
               icon={<DeleteOutlined />}
             />
-          </Button>
+          </div>
         ))}
       </ul>
     </div>
