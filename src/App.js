@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './App.css'
-// import { TabsComponent } from './components/TabsComponent'
-// import { LoggingComponent } from './components/LoggingComponent'
+import { TabsComponent } from './components/TabsComponent'
+import { LoggingComponent } from './components/LoggingComponent'
 import { Sider } from './components/Sider/Sider'
 
 const initialItems = [
@@ -20,9 +20,14 @@ const initialItems = [
     title: '2tsdaditle',
     snippet: '2sfasfanippet',
   },
+  {
+    id: '4user',
+    title: '2tsdaditle',
+    snippet: '2sfa sfsad anippet',
+  },
 ]
 function App() {
-  const [current, setCurrent] = useState('1')
+  const [current, setCurrent] = useState('1user')
   const [items, setItems] = useState(initialItems)
   return (
     <Sider
