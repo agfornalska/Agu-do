@@ -1,0 +1,11 @@
+.box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background: rgb(135, 211, 255);
+}
+.check-list {
+  display: flex;
+  flex-direction: column;
+}

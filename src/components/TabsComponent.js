@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 
 import { Tabs } from 'antd'
-import { LoggingComponent } from './LoggingComponent'
+
 import { TabContent } from './TabContent'
 
 export function TabsComponent() {

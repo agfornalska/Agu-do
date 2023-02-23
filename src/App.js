@@ -3,6 +3,7 @@ import './App.css'
 import { TabsComponent } from './components/TabsComponent'
 import { LoggingComponent } from './components/LoggingComponent'
 import { Sider } from './components/Sider/Sider'
+import { LoggedContent } from './components/LoggedContent/LoggedContent'
 
 const initialItems = [
   {
@@ -30,12 +31,9 @@ function App() {
   const [current, setCurrent] = useState('1user')
   const [items, setItems] = useState(initialItems)
   return (
-    <Sider
-      items={items}
-      setItems={setItems}
-      current={current}
-      setCurrent={setCurrent}
-    />
+    <div>
+      <LoggedContent current={current} />
+    </div>
   )
 }
 
