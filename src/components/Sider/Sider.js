@@ -4,36 +4,22 @@ import { DeleteOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 import './Sider.css'
 
-/**
- * id:  '1',
-    title: 'Tytuł ',
-    snippet: 'sa', - 50 znakow opis
-    userId: '1user',
-    {`button-default ${
-              item.id === current ? 'button-clicked' : 'button-new'
-            }`}
- */
-
 export function Sider({ items = [], setItems, current, setCurrent }) {
-  console.log('🚀 ~ file: UserContent.js:32 ~ Snippet ~ current', current)
+  function deleteCurrentItem(event, chosen) {
+    if (items.length === 1) {
+      setItems([])
+      setCurrent(null)
+      return
+    }
+    const newItems = items.filter((item) => item.id !== chosen)
+    if (current === chosen) {
+      const newCurrentIndex = items.map((item) => item.id).indexOf(chosen) - 1
 
-  function deleteCurrentItem(event, id) {
-    console.log('🚀 ~ file: Sider.js:17 ~ deleteCurrentItem ~ current', current)
-    setItems((oldValues) => {
-      const newItems = oldValues.filter((item) => item.id !== id)
-      const newCurrentIndex = oldValues.map((item) => item.id).indexOf(id) - 1
-      console.log(
-        '🚀 ~ file: Sider.js:25 ~ setItems ~ newCurrentIndex',
-        newCurrentIndex
-      )
       newCurrentIndex !== -1
         ? setCurrent(newItems[newCurrentIndex].id)
-        : newItems.length !== 0
-        ? setCurrent(newItems[0].id)
-        : setCurrent(null)
-
-      return newItems
-    })
+        : setCurrent(newItems[0].id)
+    }
+    setItems(newItems)
     event.stopPropagation()
   }
 
