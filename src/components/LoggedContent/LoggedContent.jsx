@@ -1,7 +1,8 @@
 import './LoggedContent.css'
 import { Button, Checkbox, Input } from 'antd'
-import React, { useState } from 'react'
+import React, { useReducer } from 'react'
 import uuid from 'react-uuid'
+import reducer from './LoggedContentReducer'
 
 const initialItem = {
   id: '1todoId',
@@ -35,60 +36,69 @@ const initialItem = {
 
 export function LoggedContent({ current }) {
   //GET /todo/:todoId
-  const [toDoItem, setToDoItem] = useState(initialItem)
+  const [toDoItem, dispatch] = useReducer(reducer, initialItem)
   const { id, userId, title, notes, description, taskList } = toDoItem
 
-  function handleCheckbox(checkedTitle, event) {
+  function handleTaskList(type, taskId, event) {
     const newTaskList = taskList.map((task) => {
-      if (task.taskTitle === checkedTitle)
-        return { ...task, isDone: event.target.checked }
+      if (task.taskId === taskId) {
+        if (type === 'checked') {
+          return { ...task, isDone: event.target.checked }
+        }
+        if (type === 'changed') {
+          return { ...task, taskTitle: event.target.value }
+        }
+      }
       return task
     })
 
-    setToDoItem({ ...toDoItem, taskList: newTaskList })
+    dispatch({ type: 'taskList', element: newTaskList })
   }
 
-  function handleInput(changedTitle, event) {
-    console.log(
-      '🚀 ~ file: LoggedContent.js:47 ~ handleInput ~ changedTitle:',
-      changedTitle
-    )
-    const newTaskList = taskList.map((task) => {
-      if (task.taskTitle === changedTitle)
-        return { ...task, taskTitle: event.target.value }
-      return task
-    })
-    console.log(
-      '🚀 ~ file: LoggedContent.js:52 ~ newTaskList ~ newTaskList:',
-      newTaskList
-    )
-
-    setToDoItem({ ...toDoItem, taskList: newTaskList })
+  function handleInput(type, event) {
+    const newElement = event.target.value
+    dispatch({ type, element: newElement })
   }
 
   return (
     <div className='box'>
-      <div>{title}</div>
-      <div>{description}</div>
+      <Input
+        bordered={false}
+        defaultValue='new title'
+        value={title}
+        onChange={(event) => handleInput('title', event)}
+      />
+      <Input
+        bordered={false}
+        defaultValue='description'
+        value={description}
+        onChange={(event) => handleInput('description', event)}
+      />
       <div className='check-list'>
         {taskList.map(({ taskTitle, isDone, taskId }) => (
           <ul key={taskId}>
             <div>
               <Checkbox
                 checked={isDone}
-                onChange={(event) => handleCheckbox(taskTitle, event)}
+                onChange={(event) => handleTaskList('checked', taskId, event)}
               >
                 <Input
+                  bordered={false}
                   defaultValue='new assigment'
                   value={taskTitle}
-                  onChange={(event) => handleInput(taskTitle, event)}
-                ></Input>
+                  onChange={(event) => handleTaskList('changed', taskId, event)}
+                />
               </Checkbox>
             </div>
           </ul>
         ))}
       </div>
-      <div>{notes}</div>
+      <Input
+        bordered={false}
+        defaultValue='your notes'
+        value={notes}
+        onChange={(event) => handleInput('notes', event)}
+      />
       <Button>Save</Button>
     </div>
   )
