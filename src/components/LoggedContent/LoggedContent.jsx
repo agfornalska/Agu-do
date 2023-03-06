@@ -63,13 +63,11 @@ export function LoggedContent({ current }) {
   return (
     <div className='box'>
       <Input
-        bordered={false}
         defaultValue='new title'
         value={title}
         onChange={(event) => handleInput('title', event)}
       />
       <Input
-        bordered={false}
         defaultValue='description'
         value={description}
         onChange={(event) => handleInput('description', event)}
@@ -83,7 +81,6 @@ export function LoggedContent({ current }) {
                 onChange={(event) => handleTaskList('checked', taskId, event)}
               >
                 <Input
-                  bordered={false}
                   defaultValue='new assigment'
                   value={taskTitle}
                   onChange={(event) => handleTaskList('changed', taskId, event)}
@@ -94,7 +91,6 @@ export function LoggedContent({ current }) {
         ))}
       </div>
       <Input
-        bordered={false}
         defaultValue='your notes'
         value={notes}
         onChange={(event) => handleInput('notes', event)}

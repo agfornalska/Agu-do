@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import './App.css'
-import { TabsComponent } from './components/TabsComponent'
-import { LoggingComponent } from './components/LoggingComponent'
+
 import { Sider } from './components/Sider/Sider'
 import { LoggedContent } from './components/LoggedContent/LoggedContent'
+import { Header } from './components/Header/Header'
 
 const initialItems = [
   {
@@ -32,7 +32,7 @@ function App() {
   const [items, setItems] = useState(initialItems)
   return (
     <div>
-      <LoggedContent current={current} />
+      <Header />
     </div>
   )
 }

@@ -1,0 +1,33 @@
+.tab-list {
+  display: flex;
+  flex-direction: row;
+}
+.tab-cliked {
+}
+.tab-default {
+  display: flex;
+  flex-direction: row;
+
+  height: 32px;
+  padding: 4px 15px;
+
+  box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  border-color: rgb(0 0 0 / 15%);
+  border-bottom: #ffffff;
+  color: rgba(0, 0, 0, 0.88);
+
+  font-size: 14px;
+  font-weight: 400;
+
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  touch-action: manipulation;
+  line-height: 1.5714285714285714;
+}
+.tab-delete-button {
+  width: 10px;
+  padding-inline-start: 2;
+}
