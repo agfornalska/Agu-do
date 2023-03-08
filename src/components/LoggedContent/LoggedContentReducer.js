@@ -1,5 +1,9 @@
+import uuid from 'react-uuid'
 export default function reducer(toDoItem, action) {
   switch (action.type) {
+    case 'fetch': {
+      return { ...action.element }
+    }
     case 'title': {
       return {
         ...toDoItem,

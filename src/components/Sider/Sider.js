@@ -1,38 +1,62 @@
-// import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 import './Sider.css'
 
-export function Sider({ items = [], setItems, current, setCurrent }) {
+export function Sider({ userId, currentSnippet, setCurrentSnippet }) {
+  const [items, setItems] = useState([])
+
+  useEffect(() => {
+    async function fetchSnippets() {
+      const response = await fetch('/todo', {
+        method: 'GET',
+        headers: { 'user-id': userId },
+      })
+
+      const responseBody = await response.json()
+
+      try {
+        if (responseBody.errorMessage) {
+          throw new Error(responseBody.errorMessage)
+        }
+        setItems(responseBody.snippets)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchSnippets()
+  }, [userId])
+
   function deleteCurrentItem(event, chosen) {
     if (items.length === 1) {
       setItems([])
-      setCurrent(null)
+      setCurrentSnippet(null)
       return
     }
     const newItems = items.filter((item) => item.id !== chosen)
-    if (current === chosen) {
+    if (currentSnippet === chosen) {
       const newCurrentIndex = items.map((item) => item.id).indexOf(chosen) - 1
 
       newCurrentIndex !== -1
-        ? setCurrent(newItems[newCurrentIndex].id)
-        : setCurrent(newItems[0].id)
+        ? setCurrentSnippet(newItems[newCurrentIndex].id)
+        : setCurrentSnippet(newItems[0].id)
     }
     setItems(newItems)
     event.stopPropagation()
   }
-
+  console.log(currentSnippet)
   return (
-    <div className='list-div'>
+    <div>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {items.map((item) => (
           <div
             key={item.id}
-            onClick={() => setCurrent(item.id)}
+            onClick={() => setCurrentSnippet(item.id)}
             className={classNames([
               'box-default',
-              item.id === current ? 'box-clicked' : 'box-new',
+              item.id === currentSnippet ? 'box-clicked' : 'box-new',
             ])}
           >
             <div style={{ whiteSpace: 'normal' }}>

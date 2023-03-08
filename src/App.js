@@ -28,8 +28,7 @@ const initialItems = [
   },
 ]
 function App() {
-  const [current, setCurrent] = useState('1user')
-  const [items, setItems] = useState(initialItems)
+  console.log('🚀 ~ file: App.js:30 ~ i:', initialItems)
   return (
     <div>
       <Header />

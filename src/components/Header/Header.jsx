@@ -3,15 +3,18 @@ import React, { useRef, useState } from 'react'
 import { Button } from 'antd'
 import { LoggedContent } from '../LoggedContent/LoggedContent'
 import { LoggingComponent } from '../LoggingComponent'
+import { Sider } from '../Sider/Sider'
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 
 import './Header.css'
 
 export function Header() {
+  const [currentSnippet, setCurrentSnippet] = useState(null)
   const [panes, setPanes] = useState([{ name: null, id: null }])
   const [userData, setUserData] = React.useState(panes[0])
   const { id, name } = userData
+  const [snippetId, setSnippetId] = useState(null)
 
   function handleLoggedIn(responseBody) {
     const newUserData = {
@@ -63,6 +66,7 @@ export function Header() {
     setPanes(newPanes)
     event.stopPropagation()
   }
+
   return (
     <div>
       <div className='tab-list'>
@@ -85,15 +89,24 @@ export function Header() {
           <PlusOutlined />
         </Button>
       </div>
-      {!id ? (
-        <LoggingComponent
-          userData={userData}
-          setUserData={setUserData}
-          handleLoggedIn={handleLoggedIn}
-        />
-      ) : (
-        <LoggedContent />
-      )}
+      <div>
+        {!id ? (
+          <LoggingComponent
+            userData={userData}
+            setUserData={setUserData}
+            handleLoggedIn={handleLoggedIn}
+          />
+        ) : (
+          <div className='content'>
+            <Sider
+              userId={id}
+              currentSnippet={currentSnippet}
+              setCurrentSnippet={setCurrentSnippet}
+            />
+            <LoggedContent idUser={id} current={currentSnippet} />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

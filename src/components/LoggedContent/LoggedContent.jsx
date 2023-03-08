@@ -1,6 +1,6 @@
 import './LoggedContent.css'
 import { Button, Checkbox, Input } from 'antd'
-import React, { useReducer } from 'react'
+import React, { useReducer, useEffect } from 'react'
 import uuid from 'react-uuid'
 import reducer from './LoggedContentReducer'
 
@@ -34,10 +34,43 @@ const initialItem = {
   ],
 }
 
-export function LoggedContent({ current }) {
+export function LoggedContent({ idUser, current }) {
   //GET /todo/:todoId
-  const [toDoItem, dispatch] = useReducer(reducer, initialItem)
+  const [toDoItem, dispatch] = useReducer(reducer, {})
   const { id, userId, title, notes, description, taskList } = toDoItem
+
+  useEffect(() => {
+    console.log(
+      '🚀 ~ file: LoggedContent.jsx:38 ~ LoggedContent ~ current:',
+      current
+    )
+    async function fetchItems() {
+      const response = await fetch(`/todo/${current}`, {
+        method: 'GET',
+        headers: {
+          'user-id': idUser,
+        },
+      })
+
+      const responseBody = await response.json()
+
+      try {
+        if (responseBody.errorMessage) {
+          throw new Error(responseBody.errorMessage)
+        }
+
+        dispatch({ type: 'fetch', element: responseBody })
+        console.log(
+          '🚀 ~ file: LoggedContent.jsx:64 ~ fetchItems ~ responseBody:',
+          responseBody
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchItems()
+  }, [current, dispatch, idUser])
 
   function handleTaskList(type, taskId, event) {
     const newTaskList = taskList.map((task) => {
@@ -73,7 +106,7 @@ export function LoggedContent({ current }) {
         onChange={(event) => handleInput('description', event)}
       />
       <div className='check-list'>
-        {taskList.map(({ taskTitle, isDone, taskId }) => (
+        {taskList?.map(({ taskTitle, isDone, taskId }) => (
           <ul key={taskId}>
             <div>
               <Checkbox

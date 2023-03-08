@@ -3,6 +3,7 @@
   flex-direction: row;
 }
 .tab-cliked {
+  color: blue;
 }
 .tab-default {
   display: flex;
@@ -30,4 +31,8 @@
 .tab-delete-button {
   width: 10px;
   padding-inline-start: 2;
+}
+.content {
+  display: flex;
+  flex-direction: row;
 }
