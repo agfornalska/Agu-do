@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import './App.css'
-import { TabsComponent } from './components/TabsComponent'
-import { LoggingComponent } from './components/LoggingComponent'
+
 import { Sider } from './components/Sider/Sider'
+import { LoggedContent } from './components/LoggedContent/LoggedContent'
+import { Header } from './components/Header/Header'
 
 const initialItems = [
   {
@@ -27,15 +28,11 @@ const initialItems = [
   },
 ]
 function App() {
-  const [current, setCurrent] = useState('1user')
-  const [items, setItems] = useState(initialItems)
+  console.log('🚀 ~ file: App.js:30 ~ i:', initialItems)
   return (
-    <Sider
-      items={items}
-      setItems={setItems}
-      current={current}
-      setCurrent={setCurrent}
-    />
+    <div>
+      <Header />
+    </div>
   )
 }
 
