@@ -1,8 +1,15 @@
 import uuid from 'react-uuid'
 export default function reducer(toDoItem, action) {
   switch (action.type) {
+    case 'none': {
+      return {}
+    }
     case 'fetch': {
-      return { ...action.element }
+      const newTaskList = action.element.taskList.map((task) => {
+        return { ...task, key: uuid() }
+      })
+
+      return { ...action.element, taskList: newTaskList }
     }
     case 'title': {
       return {

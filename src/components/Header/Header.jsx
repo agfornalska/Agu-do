@@ -14,7 +14,6 @@ export function Header() {
   const [panes, setPanes] = useState([{ name: null, id: null }])
   const [userData, setUserData] = React.useState(panes[0])
   const { id, name } = userData
-  const [snippetId, setSnippetId] = useState(null)
 
   function handleLoggedIn(responseBody) {
     const newUserData = {
@@ -37,6 +36,7 @@ export function Header() {
     const newUserData = panes.find((pane) => pane.id === newActiveTab)
     setUserData(newUserData)
   }
+
   function addTab() {
     if (panes[panes.length - 1].id === null) return
     const newPanes = [...panes]
@@ -48,10 +48,14 @@ export function Header() {
     setPanes(newPanes)
     setUserData(newElement)
   }
+
   function remove(event, targetId) {
-    console.log('🚀 ~ file: Header.jsx:49 ~ remove ~ targetId:', targetId)
+    event.stopPropagation()
+
     if (panes.length === 1) {
       setPanes([{ name: null, id: null }])
+      setCurrentSnippet(null)
+      setUserData({})
       return
     }
 
@@ -64,7 +68,6 @@ export function Header() {
         : setUserData(newPanes[0])
     }
     setPanes(newPanes)
-    event.stopPropagation()
   }
 
   return (
