@@ -30,11 +30,13 @@ export function Sider({ userId, currentSnippet, setCurrentSnippet }) {
   }, [userId])
 
   function deleteCurrentItem(event, chosen) {
+    event.stopPropagation()
     if (items.length === 1) {
       setItems([])
       setCurrentSnippet(null)
       return
     }
+
     const newItems = items.filter((item) => item.id !== chosen)
     if (currentSnippet === chosen) {
       const newCurrentIndex = items.map((item) => item.id).indexOf(chosen) - 1
@@ -43,8 +45,8 @@ export function Sider({ userId, currentSnippet, setCurrentSnippet }) {
         ? setCurrentSnippet(newItems[newCurrentIndex].id)
         : setCurrentSnippet(newItems[0].id)
     }
+
     setItems(newItems)
-    event.stopPropagation()
   }
   console.log(currentSnippet)
   return (

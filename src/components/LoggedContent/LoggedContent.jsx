@@ -4,35 +4,35 @@ import React, { useReducer, useEffect } from 'react'
 import uuid from 'react-uuid'
 import reducer from './LoggedContentReducer'
 
-const initialItem = {
-  id: '1todoId',
-  userId: '1user',
-  title: '1 sadtitle',
-  notes: '1 notes notes',
-  description: 'description description description blabalam ska ',
-  taskList: [
-    {
-      taskId: uuid(),
-      taskTitle: '1 task',
-      isDone: true,
-    },
-    {
-      taskId: uuid(),
-      taskTitle: '2 task',
-      isDone: false,
-    },
-    {
-      taskId: uuid(),
-      taskTitle: '3 task',
-      isDone: true,
-    },
-    {
-      taskId: uuid(),
-      taskTitle: '4 task',
-      isDone: false,
-    },
-  ],
-}
+// const initialItem = {
+//   id: '1todoId',
+//   userId: '1user',
+//   title: '1 sadtitle',
+//   notes: '1 notes notes',
+//   description: 'description description description blabalam ska ',
+//   taskList: [
+//     {
+//       taskId: uuid(),
+//       taskTitle: '1 task',
+//       isDone: true,
+//     },
+//     {
+//       taskId: uuid(),
+//       taskTitle: '2 task',
+//       isDone: false,
+//     },
+//     {
+//       taskId: uuid(),
+//       taskTitle: '3 task',
+//       isDone: true,
+//     },
+//     {
+//       taskId: uuid(),
+//       taskTitle: '4 task',
+//       isDone: false,
+//     },
+//   ],
+// }
 
 export function LoggedContent({ idUser, current }) {
   //GET /todo/:todoId
@@ -40,10 +40,6 @@ export function LoggedContent({ idUser, current }) {
   const { id, userId, title, notes, description, taskList } = toDoItem
 
   useEffect(() => {
-    console.log(
-      '🚀 ~ file: LoggedContent.jsx:38 ~ LoggedContent ~ current:',
-      current
-    )
     async function fetchItems() {
       const response = await fetch(`/todo/${current}`, {
         method: 'GET',
@@ -60,16 +56,15 @@ export function LoggedContent({ idUser, current }) {
         }
 
         dispatch({ type: 'fetch', element: responseBody })
-        console.log(
-          '🚀 ~ file: LoggedContent.jsx:64 ~ fetchItems ~ responseBody:',
-          responseBody
-        )
       } catch (error) {
         console.log(error)
       }
     }
-
-    fetchItems()
+    console.log(
+      '🚀 ~ file: LoggedContent.jsx:74 ~ useEffect ~ current:',
+      current
+    )
+    current ? fetchItems() : dispatch({ type: 'none' })
   }, [current, dispatch, idUser])
 
   function handleTaskList(type, taskId, event) {

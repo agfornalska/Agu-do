@@ -17,11 +17,6 @@ const items = [
 export function LoggingComponent({ userData, setUserData, handleLoggedIn }) {
   const [current, setCurrent] = useState('login')
   const { id, name } = userData
-  console.log(
-    '🚀 ~ file: LoggingComponent.js:20 ~ LoggingComponent ~  userdata:',
-    name,
-    id
-  )
 
   function handleClick() {
     const requestBody = { userName: name }
@@ -49,10 +44,6 @@ export function LoggingComponent({ userData, setUserData, handleLoggedIn }) {
             throw new Error(responseBody.errorMessage)
           handleLoggedIn(responseBody)
         })
-    console.log(
-      '🚀 ~ file: LoggingComponent.js:39 ~ autentykacja ~ userData:',
-      userData
-    )
   }
   function handleChange(event) {
     setUserData({ ...userData, name: event.target.value })
