@@ -59,6 +59,7 @@ export function LoggingComponent({ userData, setUserData, handleLoggedIn }) {
 
       <Input
         onChange={handleChange}
+        value={name}
         placeholder='Enter your username'
         prefix={<UserOutlined className='site-form-item-icon' />}
         suffix={

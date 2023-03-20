@@ -10,9 +10,12 @@ import classNames from 'classnames'
 import './Header.css'
 
 export function Header() {
-  const [currentSnippet, setCurrentSnippet] = useState(null)
+  const [currentSnippet, setCurrentSnippet] = useState({
+    id: null,
+    isNew: true,
+  })
   const [panes, setPanes] = useState([{ name: null, id: null }])
-  const [userData, setUserData] = React.useState(panes[0])
+  const [userData, setUserData] = React.useState({ name: 'Agu', id: null })
   const { id, name } = userData
 
   function handleLoggedIn(responseBody) {
@@ -100,13 +103,12 @@ export function Header() {
             handleLoggedIn={handleLoggedIn}
           />
         ) : (
-          <div className='content'>
+          <div>
             <Sider
               userId={id}
               currentSnippet={currentSnippet}
               setCurrentSnippet={setCurrentSnippet}
             />
-            <LoggedContent idUser={id} current={currentSnippet} />
           </div>
         )}
       </div>

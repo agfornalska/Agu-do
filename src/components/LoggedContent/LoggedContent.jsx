@@ -1,47 +1,36 @@
 import './LoggedContent.css'
 import { Button, Checkbox, Input } from 'antd'
-import React, { useReducer, useEffect } from 'react'
-import uuid from 'react-uuid'
-import reducer from './LoggedContentReducer'
-
-// const initialItem = {
-//   id: '1todoId',
-//   userId: '1user',
-//   title: '1 sadtitle',
-//   notes: '1 notes notes',
-//   description: 'description description description blabalam ska ',
-//   taskList: [
-//     {
-//       taskId: uuid(),
-//       taskTitle: '1 task',
-//       isDone: true,
-//     },
-//     {
-//       taskId: uuid(),
-//       taskTitle: '2 task',
-//       isDone: false,
-//     },
-//     {
-//       taskId: uuid(),
-//       taskTitle: '3 task',
-//       isDone: true,
-//     },
-//     {
-//       taskId: uuid(),
-//       taskTitle: '4 task',
-//       isDone: false,
-//     },
-//   ],
-// }
+import React, { useReducer, useEffect, useRef } from 'react'
+import reducer, { initialState } from './LoggedContentReducer'
 
 export function LoggedContent({ idUser, current }) {
   //GET /todo/:todoId
-  const [toDoItem, dispatch] = useReducer(reducer, {})
-  const { id, userId, title, notes, description, taskList } = toDoItem
+  const [toDoItem, dispatch] = useReducer(reducer, initialState)
+  const { title, notes, description, taskList, status } = toDoItem
+  const { id: currentId, isNew } = current
+  console.log('🚀 ~ file: LoggedContent.jsx:12 ~ LoggedContent ~ isNew:', isNew)
+  console.log(
+    '🚀 ~ file: LoggedContent.jsx:12 ~ LoggedContent ~ currentId:',
+    currentId
+  )
+  const lastFetchedId = useRef(null)
 
   useEffect(() => {
+    //ten sam itemek
+    //Agudo - feczowanie kiedy nie ma w lokalnej bazie itemka! lub tworzenie nowego . ZADANIE NA jutro
+    if (currentId === lastFetchedId.current) return
+    dispatch({ type: 'new' })
+  }, [currentId])
+
+  useEffect(() => {
+    if (isNew) return
+    if (status !== 'IDLE') return
+
+    lastFetchedId.current = currentId
+
     async function fetchItems() {
-      const response = await fetch(`/todo/${current}`, {
+      dispatch({ type: 'fetchStart' })
+      const response = await fetch(`/todo/${currentId}`, {
         method: 'GET',
         headers: {
           'user-id': idUser,
@@ -50,22 +39,16 @@ export function LoggedContent({ idUser, current }) {
 
       const responseBody = await response.json()
 
-      try {
-        if (responseBody.errorMessage) {
-          throw new Error(responseBody.errorMessage)
-        }
-
-        dispatch({ type: 'fetch', element: responseBody })
-      } catch (error) {
-        console.log(error)
+      if (responseBody.errorMessage) {
+        console.error(responseBody.errorMessage)
+        return
       }
+
+      dispatch({ type: 'fetch', element: responseBody })
     }
-    console.log(
-      '🚀 ~ file: LoggedContent.jsx:74 ~ useEffect ~ current:',
-      current
-    )
-    current ? fetchItems() : dispatch({ type: 'none' })
-  }, [current, dispatch, idUser])
+
+    fetchItems()
+  }, [currentId, dispatch, idUser, isNew, status])
 
   function handleTaskList(type, taskId, event) {
     const newTaskList = taskList.map((task) => {
@@ -87,7 +70,9 @@ export function LoggedContent({ idUser, current }) {
     const newElement = event.target.value
     dispatch({ type, element: newElement })
   }
-
+  function saveItem() {
+    console.log('clicked')
+  }
   return (
     <div className='box'>
       <Input
@@ -123,7 +108,7 @@ export function LoggedContent({ idUser, current }) {
         value={notes}
         onChange={(event) => handleInput('notes', event)}
       />
-      <Button>Save</Button>
+      <Button onClick={() => saveItem()}>Save</Button>
     </div>
   )
 }
