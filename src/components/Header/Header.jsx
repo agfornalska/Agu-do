@@ -1,46 +1,11 @@
-import React, { useRef, useState } from 'react'
-
+import React from 'react'
 import { Button } from 'antd'
-import { LoggedContent } from '../LoggedContent/LoggedContent'
-import { LoggingComponent } from '../LoggingComponent'
-import { Sider } from '../Sider/Sider'
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons'
-import classNames from 'classnames'
 
 import './Header.css'
 
-export function Header() {
-  const [currentSnippet, setCurrentSnippet] = useState({
-    id: null,
-    isNew: true,
-  })
-  const [panes, setPanes] = useState([{ name: null, id: null }])
-  const [userData, setUserData] = React.useState({ name: 'Agu', id: null })
-  const { id, name } = userData
-
-  function handleLoggedIn(responseBody) {
-    const newUserData = {
-      name: responseBody.name,
-      id: responseBody.id,
-    }
-    setUserData(newUserData)
-
-    const newPanes = panes.map((pane) =>
-      pane.id === null ? newUserData : pane
-    )
-    console.log(
-      '🚀 ~ file: Header.jsx:33 ~ handleLoggedIn ~ newPanes:',
-      newPanes
-    )
-    setPanes(newPanes)
-  }
-
-  function selectTabContent(newActiveTab) {
-    const newUserData = panes.find((pane) => pane.id === newActiveTab)
-    setUserData(newUserData)
-  }
-
-  function addTab() {
+export default function Header({ panes, selectTabContent, remove, addTab }) {
+  function handleAddTab() {
     if (panes[panes.length - 1].id === null) return
     const newPanes = [...panes]
     const newElement = {
@@ -48,29 +13,8 @@ export function Header() {
       id: null,
     }
     newPanes.push(newElement)
-    setPanes(newPanes)
-    setUserData(newElement)
-  }
 
-  function remove(event, targetId) {
-    event.stopPropagation()
-
-    if (panes.length === 1) {
-      setPanes([{ name: null, id: null }])
-      setCurrentSnippet(null)
-      setUserData({})
-      return
-    }
-
-    const newPanes = panes.filter((pane) => pane.id !== targetId)
-    if (userData.id === targetId) {
-      const newCurrentIndex = panes.map((pane) => pane.id).indexOf(targetId) - 1
-
-      newCurrentIndex !== -1
-        ? setUserData(newPanes[newCurrentIndex])
-        : setUserData(newPanes[0])
-    }
-    setPanes(newPanes)
+    addTab(newPanes, newElement.id)
   }
 
   return (
@@ -91,26 +35,9 @@ export function Header() {
             </div>
           </div>
         ))}
-        <Button onClick={addTab}>
+        <Button onClick={handleAddTab}>
           <PlusOutlined />
         </Button>
-      </div>
-      <div>
-        {!id ? (
-          <LoggingComponent
-            userData={userData}
-            setUserData={setUserData}
-            handleLoggedIn={handleLoggedIn}
-          />
-        ) : (
-          <div>
-            <Sider
-              userId={id}
-              currentSnippet={currentSnippet}
-              setCurrentSnippet={setCurrentSnippet}
-            />
-          </div>
-        )}
       </div>
     </div>
   )

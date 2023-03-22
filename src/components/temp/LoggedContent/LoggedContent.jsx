@@ -7,12 +7,12 @@ export function LoggedContent({ idUser, current }) {
   //GET /todo/:todoId
   const [toDoItem, dispatch] = useReducer(reducer, initialState)
   const { title, notes, description, taskList, status } = toDoItem
-  const { id: currentId, isNew } = current
-  console.log('🚀 ~ file: LoggedContent.jsx:12 ~ LoggedContent ~ isNew:', isNew)
   console.log(
-    '🚀 ~ file: LoggedContent.jsx:12 ~ LoggedContent ~ currentId:',
-    currentId
+    '🚀 ~ file: LoggedContent.jsx:10 ~ LoggedContent ~ toDoItem:',
+    toDoItem
   )
+  const { id: currentId, isNew } = current
+
   const lastFetchedId = useRef(null)
 
   useEffect(() => {
