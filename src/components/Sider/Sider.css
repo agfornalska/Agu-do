@@ -1,0 +1,40 @@
+.box-default {
+  height: 120px;
+  width: 256px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: 0px;
+
+  /* border-radius: 10px; */
+  cursor: pointer;
+}
+
+.box-new {
+  background: rgb(240, 130, 130);
+  color: rgb(80, 20, 38);
+}
+
+.title {
+  font-size: 20px;
+  text-align: left;
+  text-decoration: underline;
+}
+.snippet {
+  max-width: 90%;
+  font-size: 14px;
+  line-height: normal;
+  text-align: left;
+}
+
+.box-clicked {
+  background: rgb(135, 211, 255);
+  color: rgb(20, 16, 43);
+}
+
+.delete {
+  min-width: 32px;
+  padding: 0px;
+}

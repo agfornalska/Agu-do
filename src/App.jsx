@@ -2,35 +2,16 @@ import React, { useState } from 'react'
 import './App.css'
 import Header from './components/Header/Header'
 import LogginForm from './components/LogginForm/LogginForm'
-
-// const initialItems = [
-//   {
-//     id: '1user',
-//     title: '1 sadtitle',
-//     snippet: '1snippet1 snippet 1snippet1 b; ippet1 snippet1snippet1',
-//   },
-//   {
-//     id: '2user',
-//     title: '2title',
-//     snippet: '2snippet',
-//   },
-//   {
-//     id: '3user',
-//     title: '2tsdaditle',
-//     snippet: '2sfasfanippet',
-//   },
-//   {
-//     id: '4user',
-//     title: '2tsdaditle',
-//     snippet: '2sfa sfsad anippet',
-//   },
-// ]
+import Sider from './components/Sider/Sider'
+import { toDoFetch } from './utils/ToDoUtils'
+import uuid from 'react-uuid'
 
 function App() {
-  const [panes, setPanes] = useState([{ name: null, id: null }])
+  const [panes, setPanes] = useState([{ name: 'Agu', id: null }])
   const [selectedPane, setSelectedPane] = useState(null)
+  const [currentSnippet, setCurrentSnippet] = useState(null)
 
-  const name = panes.find((pane) => pane.id === selectedPane).name
+  const { name, snippets } = panes.find((pane) => pane.id === selectedPane)
 
   function addTab(newPanes, newId) {
     setPanes(newPanes)
@@ -75,30 +56,73 @@ function App() {
 
     const url = submitType === 'login' ? '/auth' : '/user'
 
-    const response = await fetch(url, {
+    const newUserDataResponse = await toDoFetch(url, {
       method: 'POST',
       body: JSON.stringify(requestBody),
     })
 
-    const responseBody = await response.json()
+    let snippets = []
 
-    if (responseBody.errorMessage) {
-      console.error(responseBody.errorMessage)
-      return
+    if (submitType === 'login') {
+      const snippetsResponse = await toDoFetch('/todo', {
+        method: 'GET',
+        headers: { 'user-id': newUserDataResponse.id },
+      })
+      snippets = snippetsResponse.snippets
     }
 
     const newUserData = {
-      name: responseBody.name,
-      id: responseBody.id,
+      name: newUserDataResponse.name,
+      id: newUserDataResponse.id,
+      snippets,
     }
-
-    setSelectedPane(newUserData.id)
-
     const newPanes = panes.map((pane) =>
       pane.id === null ? newUserData : pane
     )
 
     setPanes(newPanes)
+    setSelectedPane(newUserDataResponse.id)
+  }
+
+  function deleteChoosenSnippet(event, chosen) {
+    event.stopPropagation()
+    if (snippets.length === 1) {
+      const newPanes = panes.map((pane) =>
+        pane.id === selectedPane ? { ...pane, snippets: [] } : pane
+      )
+      setPanes(newPanes)
+      setCurrentSnippet(null)
+      return
+    }
+
+    const newSnippets = snippets.filter((item) => item.id !== chosen)
+    if (currentSnippet === chosen) {
+      const newCurrentIndex =
+        snippets.map((item) => item.id).indexOf(chosen) - 1
+
+      newCurrentIndex !== -1
+        ? setCurrentSnippet(newSnippets[newCurrentIndex].id)
+        : setCurrentSnippet(newSnippets[0].id)
+    }
+
+    const newPanes = panes.map((pane) =>
+      pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
+    )
+    setPanes(newPanes)
+  }
+
+  function addNewSnippet() {
+    const newId = uuid()
+    const newSnippets = [
+      ...snippets,
+      { id: newId, title: null, snippet: null, isNew: true },
+    ]
+    const newPanes = panes.map((pane) =>
+      pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
+    )
+    setPanes(newPanes)
+
+    setCurrentSnippet(newId)
   }
 
   return (
@@ -109,11 +133,21 @@ function App() {
         remove={remove}
         addTab={addTab}
       />
-      <LogginForm
-        handleNameChange={handleNameChange}
-        name={name}
-        handleClick={handleLogginFormSubmit}
-      />
+      {!selectedPane ? (
+        <LogginForm
+          handleNameChange={handleNameChange}
+          name={name}
+          handleClick={handleLogginFormSubmit}
+        />
+      ) : (
+        <Sider
+          snippets={snippets}
+          currentSnippet={currentSnippet}
+          setCurrentSnippet={setCurrentSnippet}
+          deleteChoosenSnippet={deleteChoosenSnippet}
+          addNewSnippet={addNewSnippet}
+        />
+      )}
     </div>
   )
 }
