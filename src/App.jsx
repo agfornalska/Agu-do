@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 import Header from './components/Header/Header'
 import LogginForm from './components/LogginForm/LogginForm'
 import Sider from './components/Sider/Sider'
 import { toDoFetch } from './utils/ToDoUtils'
 import uuid from 'react-uuid'
+import Content from './components/Content/Content'
 
 function App() {
   const [panes, setPanes] = useState([{ name: 'Agu', id: null }])
@@ -151,11 +152,24 @@ function App() {
       })
 
       function addContentToSnippet(pane) {
+        function changeTaskList(taskList) {
+          const newTaskList = taskList.map((task) => {
+            return { ...task, key: uuid() }
+          })
+          return newTaskList
+        }
+
         const newSnippets = pane.snippets.map((snippet) =>
           snippet.id === currentSnippetId
-            ? { ...snippet, ...contentResponse, status: 'SUCCESS' }
+            ? {
+                ...snippet,
+                ...contentResponse,
+                taskList: changeTaskList(contentResponse.taskList),
+                status: 'SUCCESS',
+              }
             : snippet
         )
+
         return { ...pane, snippets: newSnippets }
       }
 
@@ -167,6 +181,23 @@ function App() {
     }
     fetchItems()
   }, [currentSnippet, currentSnippetId, panes, selectedPane, userId])
+
+  function setCurrentItem(getModification) {
+    function addModificationToSnippet(pane) {
+      const newSnippets = pane.snippets.map((snippet) =>
+        snippet.id === currentSnippetId
+          ? { ...snippet, ...getModification() }
+          : snippet
+      )
+      return { ...pane, snippets: newSnippets }
+    }
+
+    const newPanes = panes.map((pane) =>
+      pane.id === selectedPane ? addModificationToSnippet(pane) : pane
+    )
+
+    setPanes(newPanes)
+  }
 
   return (
     <div>
@@ -183,13 +214,27 @@ function App() {
           handleClick={handleLogginFormSubmit}
         />
       ) : (
-        <Sider
-          snippets={snippets}
-          currentSnippet={currentSnippetId}
-          setCurrentSnippet={setCurrentSnippetId}
-          deleteChoosenSnippet={deleteChoosenSnippet}
-          addNewSnippet={addNewSnippet}
-        />
+        <div>
+          <Sider
+            snippets={snippets}
+            currentSnippet={currentSnippetId}
+            setCurrentSnippet={setCurrentSnippetId}
+            deleteChoosenSnippet={deleteChoosenSnippet}
+            addNewSnippet={addNewSnippet}
+          />
+          {currentSnippet ? (
+            <Content
+              title={currentSnippet.title}
+              description={currentSnippet.description}
+              taskList={currentSnippet.taskList}
+              notes={currentSnippet.notes}
+              // saveItem={saveItem}
+              setCurrentItem={setCurrentItem}
+            />
+          ) : (
+            'halo'
+          )}
+        </div>
       )}
     </div>
   )
