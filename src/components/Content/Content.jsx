@@ -1,4 +1,4 @@
-import './Content.css'
+//import './Content.css'
 import { Button, Checkbox, Input } from 'antd'
 import React from 'react'
 

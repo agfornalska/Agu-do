@@ -199,6 +199,54 @@ function App() {
     setPanes(newPanes)
   }
 
+  function saveButtonHandler() {
+    const { title, notes, description, taskList, isNew } = currentSnippet
+
+    const saveTaskList = taskList
+      ? taskList.map((task) => {
+          return { taskTitle: task.taskTitle, isDone: task.isDone }
+        })
+      : [{ taskTitle: 'new', isDone: false }]
+    const method = isNew ? 'POST' : 'PUT'
+    const url = isNew ? '/todo' : `/todo/${currentSnippetId}`
+
+    const requestBody = {
+      title: title ? title : 'New Title',
+      notes: notes ? notes : 'your notes here',
+      description: description ? description : 'description',
+      taskList: saveTaskList,
+    }
+    async function fetchItems() {
+      const contentResponse = await toDoFetch(url, {
+        method: method,
+        headers: { 'user-id': userId },
+        body: JSON.stringify(requestBody),
+      })
+      return contentResponse
+    }
+
+    const response = fetchItems()
+    console.log(
+      '🚀 ~ file: App.jsx:233 ~ saveButtonHandler ~ response:',
+      response
+    )
+
+    // const newSnippets = snippets.map((snippet) =>
+    //   snippet.id === currentSnippetId ? { ...snippet, id: newId } : snippet
+    // )
+    // const newPanes = panes.map((pane) =>
+    //   pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
+    // )
+
+    // setPanes(newPanes)
+
+    // setCurrentSnippetId(newId)
+  }
+  console.log(
+    '🚀 ~ file: App.jsx:222 ~ fetchItems ~ currentSnippetId:',
+    currentSnippet
+  )
+
   return (
     <div>
       <Header
@@ -228,7 +276,7 @@ function App() {
               description={currentSnippet.description}
               taskList={currentSnippet.taskList}
               notes={currentSnippet.notes}
-              // saveItem={saveItem}
+              saveItem={saveButtonHandler}
               setCurrentItem={setCurrentItem}
             />
           ) : (

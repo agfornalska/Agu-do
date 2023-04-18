@@ -26,7 +26,7 @@ const initialTodos: Todo[] = [
   },
 ]
 
-sessionStorage.setItem('users', JSON.stringify(initialUsers))
-sessionStorage.setItem('todos', JSON.stringify(initialTodos))
+// localStorage.setItem('users', JSON.stringify(initialUsers))
+// localStorage.setItem('todos', JSON.stringify(initialTodos))
 
 export const worker = setupWorker(...handlers)
