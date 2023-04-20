@@ -19,7 +19,7 @@ const validateUser = (
       status: 403,
     }
   }
-  const sessionUsers = sessionStorage.getItem('users')
+  const sessionUsers = localStorage.getItem('users')
 
   if (!sessionUsers) {
     return {
@@ -86,7 +86,7 @@ export const handlers = [
         )
       }
 
-      const sesionTodos = sessionStorage.getItem('todos')
+      const sesionTodos = localStorage.getItem('todos')
 
       if (!sesionTodos) {
         return res(
@@ -141,7 +141,7 @@ export const handlers = [
         )
       }
 
-      const sesionTodos = sessionStorage.getItem('todos')
+      const sesionTodos = localStorage.getItem('todos')
 
       if (!sesionTodos) {
         return res(
@@ -160,7 +160,7 @@ export const handlers = [
         userId: userId as string,
       }
 
-      sessionStorage.setItem('todos', JSON.stringify(todos.concat(newTodo)))
+      localStorage.setItem('todos', JSON.stringify(todos.concat(newTodo)))
 
       return res(ctx.status(200), ctx.json(newTodo))
     }
@@ -180,7 +180,7 @@ export const handlers = [
         )
       }
 
-      const sesionTodos = sessionStorage.getItem('todos')
+      const sesionTodos = localStorage.getItem('todos')
 
       if (!sesionTodos) {
         return res(
@@ -204,7 +204,7 @@ export const handlers = [
         )
       }
 
-      sessionStorage.setItem(
+      localStorage.setItem(
         'todos',
         JSON.stringify(todos.filter((todo) => todo.id !== todoId))
       )
@@ -227,7 +227,7 @@ export const handlers = [
         )
       }
 
-      const sesionTodos = sessionStorage.getItem('todos')
+      const sesionTodos = localStorage.getItem('todos')
 
       if (!sesionTodos) {
         return res(
@@ -281,7 +281,7 @@ export const handlers = [
         )
       }
 
-      const sesionTodos = sessionStorage.getItem('todos')
+      const sesionTodos = localStorage.getItem('todos')
 
       if (!sesionTodos) {
         return res(
@@ -315,7 +315,7 @@ export const handlers = [
         return newTodo
       })
 
-      sessionStorage.setItem('todos', JSON.stringify(newTodos))
+      localStorage.setItem('todos', JSON.stringify(newTodos))
 
       return res(ctx.status(200), ctx.json(newTodo))
     }
@@ -335,7 +335,7 @@ export const handlers = [
         )
       }
 
-      const sessionUsers = sessionStorage.getItem('users')
+      const sessionUsers = localStorage.getItem('users')
 
       if (!sessionUsers) {
         return res(
@@ -376,7 +376,7 @@ export const handlers = [
         )
       }
 
-      const sessionUsers = sessionStorage.getItem('users')
+      const sessionUsers = localStorage.getItem('users')
 
       if (!sessionUsers) {
         return res(
@@ -403,7 +403,7 @@ export const handlers = [
         name: body.userName,
       }
 
-      sessionStorage.setItem('users', JSON.stringify(users.concat(newUser)))
+      localStorage.setItem('users', JSON.stringify(users.concat(newUser)))
 
       return res(ctx.status(200), ctx.json(newUser))
     }

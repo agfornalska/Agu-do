@@ -96,7 +96,7 @@ function App() {
     setSelectedPane(newUserDataResponse.id)
   }
 
-  function deleteChoosenSnippet(event, chosen) {
+  function deleteChoosenSnippet(event, chosenSnippetId) {
     event.stopPropagation()
     if (snippets.length === 1) {
       const newPanes = panes.map((pane) =>
@@ -107,10 +107,10 @@ function App() {
       return
     }
 
-    const newSnippets = snippets.filter((item) => item.id !== chosen)
-    if (currentSnippetId === chosen) {
+    const newSnippets = snippets.filter((item) => item.id !== chosenSnippetId)
+    if (currentSnippetId === chosenSnippetId) {
       const newCurrentIndex =
-        snippets.map((item) => item.id).indexOf(chosen) - 1
+        snippets.map((item) => item.id).indexOf(chosenSnippetId) - 1
 
       newCurrentIndex !== -1
         ? setCurrentSnippetId(newSnippets[newCurrentIndex].id)
@@ -121,6 +121,14 @@ function App() {
       pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
     )
     setPanes(newPanes)
+
+    async function deleteSnippetFromServer() {
+      await toDoFetch(`/todo/${chosenSnippetId}`, {
+        method: 'DELETE',
+        headers: { 'user-id': userId },
+      })
+    }
+    if (!chosenSnippetId.isNew) deleteSnippetFromServer()
   }
 
   function addNewSnippet() {
@@ -199,6 +207,53 @@ function App() {
     setPanes(newPanes)
   }
 
+  async function saveButtonHandler() {
+    const { title, notes, description, taskList, isNew } = currentSnippet
+
+    const saveTaskList = taskList
+      ? taskList.map((task) => {
+          return { taskTitle: task.taskTitle, isDone: task.isDone }
+        })
+      : [{ taskTitle: 'new', isDone: false }]
+    const method = isNew ? 'POST' : 'PUT'
+    const url = isNew ? '/todo' : `/todo/${currentSnippetId}`
+
+    const requestBody = {
+      title: title ? title : 'New Title',
+      notes: notes ? notes : 'your notes here',
+      description: description ? description : 'description',
+      taskList: saveTaskList,
+    }
+
+    const contentResponse = await toDoFetch(url, {
+      method: method,
+      headers: { 'user-id': userId },
+      body: JSON.stringify(requestBody),
+    })
+    console.log(
+      '🚀 ~ file: App.jsx:225 ~ saveButtonHandler ~ contentResponse:',
+      contentResponse
+    )
+
+    const newSnippets = snippets.map((snippet) =>
+      snippet.id === currentSnippetId
+        ? { ...contentResponse, status: 'SUCCESS' }
+        : snippet
+    )
+    const newPanes = panes.map((pane) =>
+      pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
+    )
+
+    setPanes(newPanes)
+
+    setCurrentSnippetId(contentResponse.id)
+  }
+
+  console.log(
+    '🚀 ~ file: App.jsx:222 ~ fetchItems ~ currentSnippetId:',
+    currentSnippet
+  )
+
   return (
     <div>
       <Header
@@ -214,7 +269,7 @@ function App() {
           handleClick={handleLogginFormSubmit}
         />
       ) : (
-        <div>
+        <div className='content'>
           <Sider
             snippets={snippets}
             currentSnippet={currentSnippetId}
@@ -228,7 +283,7 @@ function App() {
               description={currentSnippet.description}
               taskList={currentSnippet.taskList}
               notes={currentSnippet.notes}
-              // saveItem={saveItem}
+              saveItem={saveButtonHandler}
               setCurrentItem={setCurrentItem}
             />
           ) : (
