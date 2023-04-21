@@ -30,7 +30,11 @@ export default function Sider({
                 {item.title ? item.title : 'New title'}
               </div>
               <div className='snippet'>
-                {item.snippet ? item.snippet : 'description'}
+                {item.snippet
+                  ? item.snippet
+                  : item.description
+                  ? item.description.substring(0, 50)
+                  : '50 characters of description'}
               </div>
             </div>
             <Button

@@ -6,6 +6,7 @@ import Sider from './components/Sider/Sider'
 import { toDoFetch } from './utils/ToDoUtils'
 import uuid from 'react-uuid'
 import Content from './components/Content/Content'
+import NoContentWindow from './components/NoContentWindow/NoContentWindow'
 
 function App() {
   const [panes, setPanes] = useState([{ name: 'Agu', id: null }])
@@ -94,6 +95,7 @@ function App() {
 
     setPanes(newPanes)
     setSelectedPane(newUserDataResponse.id)
+    setCurrentSnippetId(snippets[0].id)
   }
 
   function deleteChoosenSnippet(event, chosenSnippetId) {
@@ -270,24 +272,29 @@ function App() {
         />
       ) : (
         <div className='content'>
-          <Sider
-            snippets={snippets}
-            currentSnippet={currentSnippetId}
-            setCurrentSnippet={setCurrentSnippetId}
-            deleteChoosenSnippet={deleteChoosenSnippet}
-            addNewSnippet={addNewSnippet}
-          />
           {currentSnippet ? (
-            <Content
-              title={currentSnippet.title}
-              description={currentSnippet.description}
-              taskList={currentSnippet.taskList}
-              notes={currentSnippet.notes}
-              saveItem={saveButtonHandler}
-              setCurrentItem={setCurrentItem}
-            />
+            <>
+              <Sider
+                snippets={snippets}
+                currentSnippet={currentSnippetId}
+                setCurrentSnippet={setCurrentSnippetId}
+                deleteChoosenSnippet={deleteChoosenSnippet}
+                addNewSnippet={addNewSnippet}
+              />
+              <Content
+                title={currentSnippet.title}
+                description={currentSnippet.description}
+                taskList={currentSnippet.taskList}
+                notes={currentSnippet.notes}
+                saveItem={saveButtonHandler}
+                setCurrentItem={setCurrentItem}
+              />
+            </>
           ) : (
-            'halo'
+            <NoContentWindow
+              message='Nie masz snippetow'
+              action={addNewSnippet}
+            />
           )}
         </div>
       )}
