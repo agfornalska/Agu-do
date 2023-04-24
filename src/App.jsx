@@ -147,6 +147,25 @@ function App() {
     setCurrentSnippetId(newId)
   }
 
+  //seletedPane = id panea
+
+  // function addContentToTaskList(newTaskList) {
+  //   const newSnippets = selectedPane.snippets.map((snippet) => {
+  //     snippet.id === currentSnippetId
+  //       ? {
+  //           ...snippet,
+  //           taskList: newTaskList,
+  //         }
+  //       : snippet
+
+  //     return { ...selectedPane, snippets: newSnippets }
+  //   })
+  //   const newPanes = panes.map((pane) =>
+  //     pane.id === selectedPane ? addContentToTaskList(newTaskList) : pane
+  //   )
+  //   setPanes(newPanes)
+  // }
+
   useEffect(() => {
     if (!currentSnippet) return
     const { isNew, status } = currentSnippet
@@ -214,9 +233,13 @@ function App() {
 
     const saveTaskList = taskList
       ? taskList.map((task) => {
-          return { taskTitle: task.taskTitle, isDone: task.isDone }
+          return {
+            taskTitle: task.taskTitle,
+            isDone: task.isDone,
+            taskId: task.taskId,
+          }
         })
-      : [{ taskTitle: 'new', isDone: false }]
+      : [{ taskTitle: 'new', isDone: false, taskId: uuid() }]
     const method = isNew ? 'POST' : 'PUT'
     const url = isNew ? '/todo' : `/todo/${currentSnippetId}`
 
@@ -251,11 +274,6 @@ function App() {
     setCurrentSnippetId(contentResponse.id)
   }
 
-  console.log(
-    '🚀 ~ file: App.jsx:222 ~ fetchItems ~ currentSnippetId:',
-    currentSnippet
-  )
-
   return (
     <div>
       <Header
@@ -288,6 +306,7 @@ function App() {
                 notes={currentSnippet.notes}
                 saveItem={saveButtonHandler}
                 setCurrentItem={setCurrentItem}
+                // addToTaskList={addContentToSnippet}
               />
             </>
           ) : (

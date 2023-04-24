@@ -1,6 +1,8 @@
 //import './Content.css'
 import { Button, Checkbox, Input } from 'antd'
 import React from 'react'
+import { PlusOutlined } from '@ant-design/icons'
+import uuid from 'react-uuid'
 
 export default function Content({
   title,
@@ -11,6 +13,7 @@ export default function Content({
   setCurrentItem,
 }) {
   function handleInput(type, event, taskId) {
+    console.log('🚀 ~ file: Content.jsx:17 ~ handleInput ~ list:', taskList)
     const newElement = event.target.value
       ? event.target.value
       : event.target.checked
@@ -35,7 +38,7 @@ export default function Content({
         }
         case 'taskList': {
           const newTaskList = taskList.map((task) => {
-            if (task.taskId === taskId) {
+            if (task.key === taskId) {
               if (typeof newElement === 'boolean') {
                 return { ...task, isDone: newElement }
               } else {
@@ -49,11 +52,25 @@ export default function Content({
             taskList: newTaskList,
           }
         }
+        case 'newTaskList': {
+          const newTaskList = [...taskList]
+          const newElement = {
+            taskTitle: 'New Task',
+            isDone: false,
+            key: uuid(),
+          }
+          newTaskList.push(newElement)
+
+          return {
+            taskList: newTaskList,
+          }
+        }
       }
     }
 
     setCurrentItem(getNewItem)
   }
+
   return (
     <div className='box'>
       <Input
@@ -67,22 +84,25 @@ export default function Content({
         onChange={(event) => handleInput('description', event)}
       />
       <div className='check-list'>
-        {taskList?.map(({ taskTitle, isDone, taskId }) => (
-          <ul key={taskId}>
+        {taskList?.map(({ taskTitle, isDone, key }) => (
+          <ul key={key}>
             <div>
               <Checkbox
                 checked={isDone}
-                onChange={(event) => handleInput('taskList', event)}
+                onChange={(event) => handleInput('taskList', event, key)}
               >
                 <Input
                   defaultValue='new assigment'
                   value={taskTitle}
-                  onChange={(event) => handleInput('taskList', event)}
+                  onChange={(event) => handleInput('taskList', event, key)}
                 />
               </Checkbox>
             </div>
           </ul>
         ))}
+        <Button onClick={(event) => handleInput('newTaskList', event)}>
+          <PlusOutlined />
+        </Button>
       </div>
       <Input
         defaultValue='your notes'
