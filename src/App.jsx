@@ -137,7 +137,16 @@ function App() {
     const newId = uuid()
     const newSnippets = [
       ...snippets,
-      { id: newId, title: null, snippet: null, isNew: true, status: 'SUCCESS' },
+      {
+        id: newId,
+        title: 'New title',
+        snippet: 'New Snippet',
+        isNew: true,
+        taskList: [],
+        description: 'Your description',
+        notes: 'Type your notes',
+        status: 'SUCCESS',
+      },
     ]
     const newPanes = panes.map((pane) =>
       pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
@@ -146,25 +155,6 @@ function App() {
 
     setCurrentSnippetId(newId)
   }
-
-  //seletedPane = id panea
-
-  // function addContentToTaskList(newTaskList) {
-  //   const newSnippets = selectedPane.snippets.map((snippet) => {
-  //     snippet.id === currentSnippetId
-  //       ? {
-  //           ...snippet,
-  //           taskList: newTaskList,
-  //         }
-  //       : snippet
-
-  //     return { ...selectedPane, snippets: newSnippets }
-  //   })
-  //   const newPanes = panes.map((pane) =>
-  //     pane.id === selectedPane ? addContentToTaskList(newTaskList) : pane
-  //   )
-  //   setPanes(newPanes)
-  // }
 
   useEffect(() => {
     if (!currentSnippet) return
