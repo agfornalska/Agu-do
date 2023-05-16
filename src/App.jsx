@@ -23,9 +23,19 @@ function App() {
     (snippet) => snippet.id === currentSnippetId
   )
 
-  function addTab(newPanes, newId) {
+  function changeTab(newPaneId) {
+    setSelectedPane(newPaneId)
+    const { snippets: newSnippets } = panes.find(
+      (pane) => pane.id === newPaneId
+    )
+    const newSnippetId = newSnippets?.length ? newSnippets[0].id : null
+
+    setCurrentSnippetId(newSnippetId)
+  }
+
+  function addTab(newPanes, newPaneId) {
     setPanes(newPanes)
-    setSelectedPane(newId)
+    setSelectedPane(newPaneId)
   }
 
   function remove(event, targetId) {
@@ -137,7 +147,16 @@ function App() {
     const newId = uuid()
     const newSnippets = [
       ...snippets,
-      { id: newId, title: null, snippet: null, isNew: true, status: 'SUCCESS' },
+      {
+        id: newId,
+        title: null,
+        snippet: null,
+        isNew: true,
+        taskList: [],
+        description: null,
+        notes: null,
+        status: 'SUCCESS',
+      },
     ]
     const newPanes = panes.map((pane) =>
       pane.id === selectedPane ? { ...pane, snippets: newSnippets } : pane
@@ -146,25 +165,6 @@ function App() {
 
     setCurrentSnippetId(newId)
   }
-
-  //seletedPane = id panea
-
-  // function addContentToTaskList(newTaskList) {
-  //   const newSnippets = selectedPane.snippets.map((snippet) => {
-  //     snippet.id === currentSnippetId
-  //       ? {
-  //           ...snippet,
-  //           taskList: newTaskList,
-  //         }
-  //       : snippet
-
-  //     return { ...selectedPane, snippets: newSnippets }
-  //   })
-  //   const newPanes = panes.map((pane) =>
-  //     pane.id === selectedPane ? addContentToTaskList(newTaskList) : pane
-  //   )
-  //   setPanes(newPanes)
-  // }
 
   useEffect(() => {
     if (!currentSnippet) return
@@ -236,16 +236,15 @@ function App() {
           return {
             taskTitle: task.taskTitle,
             isDone: task.isDone,
-            taskId: task.taskId,
           }
         })
-      : [{ taskTitle: 'new', isDone: false, taskId: uuid() }]
+      : []
     const method = isNew ? 'POST' : 'PUT'
     const url = isNew ? '/todo' : `/todo/${currentSnippetId}`
 
     const requestBody = {
-      title: title ? title : 'New Title',
-      notes: notes ? notes : 'your notes here',
+      title: title ? title : null,
+      notes: notes ? notes : null,
       description: description ? description : 'description',
       taskList: saveTaskList,
     }
@@ -275,10 +274,10 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='app-layout'>
       <Header
         panes={panes}
-        selectTabContent={setSelectedPane}
+        selectTabContent={changeTab}
         remove={remove}
         addTab={addTab}
       />
