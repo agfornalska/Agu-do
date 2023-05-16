@@ -23,9 +23,19 @@ function App() {
     (snippet) => snippet.id === currentSnippetId
   )
 
-  function addTab(newPanes, newId) {
+  function changeTab(newPaneId) {
+    setSelectedPane(newPaneId)
+    const { snippets: newSnippets } = panes.find(
+      (pane) => pane.id === newPaneId
+    )
+    const newSnippetId = newSnippets?.length ? newSnippets[0].id : null
+
+    setCurrentSnippetId(newSnippetId)
+  }
+
+  function addTab(newPanes, newPaneId) {
     setPanes(newPanes)
-    setSelectedPane(newId)
+    setSelectedPane(newPaneId)
   }
 
   function remove(event, targetId) {
@@ -139,12 +149,12 @@ function App() {
       ...snippets,
       {
         id: newId,
-        title: 'New title',
-        snippet: 'New Snippet',
+        title: null,
+        snippet: null,
         isNew: true,
         taskList: [],
-        description: 'Your description',
-        notes: 'Type your notes',
+        description: null,
+        notes: null,
         status: 'SUCCESS',
       },
     ]
@@ -226,16 +236,15 @@ function App() {
           return {
             taskTitle: task.taskTitle,
             isDone: task.isDone,
-            taskId: task.taskId,
           }
         })
-      : [{ taskTitle: 'new', isDone: false, taskId: uuid() }]
+      : []
     const method = isNew ? 'POST' : 'PUT'
     const url = isNew ? '/todo' : `/todo/${currentSnippetId}`
 
     const requestBody = {
-      title: title ? title : 'New Title',
-      notes: notes ? notes : 'your notes here',
+      title: title ? title : null,
+      notes: notes ? notes : null,
       description: description ? description : 'description',
       taskList: saveTaskList,
     }
@@ -265,10 +274,10 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='app-layout'>
       <Header
         panes={panes}
-        selectTabContent={setSelectedPane}
+        selectTabContent={changeTab}
         remove={remove}
         addTab={addTab}
       />

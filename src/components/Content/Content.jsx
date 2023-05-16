@@ -1,7 +1,6 @@
 //import './Content.css'
 import { Button, Checkbox, Input } from 'antd'
 import React from 'react'
-import { PlusOutlined } from '@ant-design/icons'
 import uuid from 'react-uuid'
 
 export default function Content({
@@ -60,7 +59,7 @@ export default function Content({
           const newTaskList = [
             ...taskList,
             {
-              taskTitle: 'New Task',
+              taskTitle: null,
               isDone: false,
               key: uuid(),
             },
@@ -79,12 +78,12 @@ export default function Content({
   return (
     <div className='box'>
       <Input
-        defaultValue='new title'
+        placeholder='New Title'
         value={title}
         onChange={(event) => handleInput('title', event.target.value)}
       />
       <Input
-        defaultValue='description'
+        placeholder='Your Descripton'
         value={description}
         onChange={(event) => handleInput('description', event.target.value)}
       />
@@ -99,7 +98,7 @@ export default function Content({
                 }
               >
                 <Input
-                  defaultValue='new assigment'
+                  placeholder='New Assigment'
                   value={taskTitle}
                   onChange={(event) =>
                     handleInput('taskList', event.target.value, key)
@@ -109,15 +108,13 @@ export default function Content({
             </div>
           </ul>
         ))}
-        <>
-          <Button onClick={(event) => handleInput('newTaskList', event)}>
-            <PlusOutlined />
-          </Button>
-          <>Add task</>
-        </>
+
+        <Button onClick={(event) => handleInput('newTaskList', event)}>
+          Add task
+        </Button>
       </div>
       <Input
-        defaultValue='your notes'
+        placeholder='Your Notes'
         value={notes}
         onChange={(event) => handleInput('notes', event.target.value)}
       />

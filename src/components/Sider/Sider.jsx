@@ -14,7 +14,10 @@ export default function Sider({
   addNewSnippet,
 }) {
   return (
-    <div>
+    <div className='sider-default'>
+      <Button className={'button-add'} onClick={addNewSnippet}>
+        Add
+      </Button>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {snippets.map((item) => (
           <div
@@ -44,7 +47,6 @@ export default function Sider({
             />
           </div>
         ))}
-        <Button onClick={addNewSnippet}>Add</Button>
       </ul>
     </div>
   )
